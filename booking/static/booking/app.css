@@ -80,7 +80,7 @@ button { cursor: pointer; }
 .hero-trust strong { color: white; }
 .trust-icon { display: grid; place-items: center; width: 21px; height: 21px; border-radius: 50%; color: #fff; background: rgb(255 255 255 / 17%); font-size: 13px; }
 .preview-wrap { position: relative; z-index: 1; padding: 58px 65px 58px 20px; }
-.preview-card { border: 1px solid rgb(255 255 255 / 55%); border-radius: 15px; background: #fff; box-shadow: 0 24px 55px rgb(3 21 39 / 25%); color: var(--ink); transform: rotate(2deg); overflow: hidden; }
+.preview-card { border: 1px solid rgb(255 255 255 / 55%); border-radius: 15px; background: #fff; box-shadow: 0 24px 55px rgb(3 21 39 / 25%); color: var(--ink); transform: none; overflow: hidden; }
 .preview-top { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px 12px; }
 .preview-title { font-weight: 700; font-size: 19px; color: var(--navy); }
 .preview-badge { color: var(--red); border: 1px solid #f6c3c5; background: #fff3f3; border-radius: 100px; padding: 4px 10px; font-size: 12px; }
