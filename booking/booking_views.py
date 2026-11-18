@@ -379,11 +379,21 @@ def booking_detail(request, booking_id):
     staff = _staff(request)
     can_manage = staff or booking.is_organizer
     upcoming = booking.starts_at > timezone.now()
+    organizer_email = booking.organizer.email.casefold() if booking.organizer_id else ""
+    attendees = [
+        attendee
+        for attendee in booking.attendees.all()
+        if not organizer_email or attendee.email.casefold() != organizer_email
+    ]
+    total_attendee_count = len(attendees) + booking.external_attendee_count + bool(booking.organizer_id)
     return render(
         request,
         "booking/booking_detail.html",
         {
             "booking": booking,
+            "attendees": attendees,
+            "attendee_count": len(attendees),
+            "total_attendee_count": total_attendee_count,
             "staff": staff,
             "is_organizer": booking.is_organizer,
             "is_attendee": booking.is_attendee and not booking.is_organizer,

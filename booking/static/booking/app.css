@@ -304,6 +304,8 @@ td a, .panel a:not(.button) { color: var(--navy); }
 .detail-list div { display: grid; grid-template-columns: 130px 1fr; gap: 15px; padding: 13px 0; border-bottom: 1px solid var(--line); }
 .detail-list dt { color: var(--muted); }
 .detail-list dd { margin: 0; color: #263d50; }
+.detail-attendee-list { display: grid; gap: 4px; margin: 0; padding-left: 18px; }
+.detail-attendee-list li { overflow-wrap: anywhere; }
 .stacked-action { display: grid; gap: 9px; margin-top: 16px; }
 .button-wide { width: 100%; justify-content: center; }
 .status { display: inline-block; border-radius: 100px; background: #edf2f6; color: #415d74; padding: 5px 10px; font-size: 12px; white-space: nowrap; }

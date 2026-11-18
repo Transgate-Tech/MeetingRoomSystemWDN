@@ -14,9 +14,10 @@
         <div><dt>Requested</dt><dd>{{ booking.created_at|date:'d M Y, H:i' }} NPT</dd></div>
         <div><dt>Department</dt><dd>{{ booking.department|default:'—' }}</dd></div>
         <div><dt>Meeting type</dt><dd>{{ booking.get_meeting_type_display }}{% if booking.guest_company_name %} · {{ booking.guest_company_name }}{% endif %}</dd></div>
+        <div><dt>Total attendees</dt><dd>{{ total_attendee_count }} people <span class="muted">(organizer, {{ attendee_count }} invited attendee{{ attendee_count|pluralize }}{% if booking.external_attendee_count %}, and {{ booking.external_attendee_count }} external guest{{ booking.external_attendee_count|pluralize }}{% endif %})</span></dd></div>
         <div><dt>External guests</dt><dd>{{ booking.external_attendee_count }}</dd></div>
         <div><dt>Refreshments</dt><dd>{{ booking.refreshments_requested|yesno:'Requested,Not requested' }}</dd></div>
-        <div><dt>Attendees</dt><dd>{% for attendee in booking.attendees.all %}{{ attendee.email }}{% if not forloop.last %}, {% endif %}{% empty %}None listed{% endfor %}</dd></div>
+        <div><dt>Invited attendees ({{ attendee_count }})</dt><dd>{% if attendees %}<ul class="detail-attendee-list">{% for attendee in attendees %}<li>{% if attendee.name %}{{ attendee.name }} · {% endif %}{{ attendee.email }}</li>{% endfor %}</ul>{% else %}None listed{% endif %}</dd></div>
         <div><dt>Description</dt><dd>{{ booking.description|default:'—'|linebreaksbr }}</dd></div>
         <div><dt>Front Desk notes</dt><dd>{{ booking.front_desk_notes|default:'—'|linebreaksbr }}</dd></div>
         {% if booking.approved_at %}<div><dt>Approved</dt><dd>{{ booking.approved_at|date:'d M Y, H:i' }} NPT{% if not booking.approved_by %} · Automatically{% elif staff %} · {{ booking.approved_by.get_full_name|default:booking.approved_by.email }}{% endif %}</dd></div>{% endif %}
