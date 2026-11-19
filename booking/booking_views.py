@@ -345,14 +345,19 @@ def booking_new(request):
                     form.cleaned_data["start_time"],
                 )
         else:
-            if staff:
-                messages.success(request, f"{len(bookings)} approved booking(s) created.")
-            elif bookings[0].status == Reservation.Status.APPROVED:
-                messages.success(
-                    request, "Booking confirmed. This room does not require administrator approval."
-                )
+            if all(booking.status == Reservation.Status.APPROVED for booking in bookings):
+                if staff:
+                    messages.success(request, f"{len(bookings)} booking(s) confirmed.")
+                else:
+                    messages.success(
+                        request, "Booking confirmed. This room does not require Front Desk approval."
+                    )
             else:
-                messages.success(request, "Booking request submitted. Waiting for administrator approval.")
+                noun = "request" if len(bookings) == 1 else "requests"
+                messages.success(
+                    request,
+                    f"{len(bookings)} booking {noun} submitted. Waiting for Front Desk approval.",
+                )
             return redirect("booking-detail", booking_id=bookings[0].pk)
     context = _booking_form_context(request)
     context.update({"form": form, "editing": False, "staff": staff})
@@ -468,11 +473,11 @@ def booking_edit(request, booking_id):
                 )
         else:
             if updated.status == Reservation.Status.PENDING:
-                messages.success(request, "Booking request updated. Waiting for administrator approval.")
+                messages.success(request, "Booking request updated. Waiting for Front Desk approval.")
             elif not staff and updated.revision != booking.revision and updated.approved_by_id is None:
                 messages.success(
                     request,
-                    "Booking updated and confirmed. This room does not require administrator approval.",
+                    "Booking updated and confirmed. This room does not require Front Desk approval.",
                 )
             else:
                 messages.success(request, "Booking updated")

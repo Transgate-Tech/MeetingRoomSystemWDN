@@ -156,8 +156,8 @@ class RoomForm(forms.ModelForm):
         initial=True,
         label="Requires approval",
         help_text=(
-            "New and changed employee requests need Front Desk or Administrator approval when checked. "
-            "Staff-created bookings are approved immediately; existing requests keep their current status."
+            "Checked requires Front Desk or Administrator review for all new bookings, including staff-created bookings. "
+            "Unchecked confirms new bookings automatically; changing this setting does not change existing bookings."
         ),
     )
     photo = forms.FileField(

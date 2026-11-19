@@ -55,8 +55,7 @@ These are initial defaults, not immutable promises. Staff can change policy thro
 | Advance horizon | 14 days, including recurring occurrences |
 | Recurrence | Daily/weekly/monthly; finite occurrences, no automatic future renewal |
 | Room Requires approval | Checked by default; staff can change each room |
-| Employee request | Checked room: Pending hold until review/expiry; unchecked room: Approved immediately |
-| Staff-created booking | Approved immediately |
+| New employee or staff booking | Checked room: Pending hold until review/expiry; unchecked room: Approved immediately |
 | Unreviewed request | Cancelled at meeting start when reconciliation runs |
 | Check-in | From start until before start + 15 minutes |
 | No check-in | No show; occupancy released, history preserved |

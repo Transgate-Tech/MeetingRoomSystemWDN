@@ -891,7 +891,7 @@ If rollback is needed, stop every writer again and review which database has acc
 - Ordinary employees see Booked/time/room for unrelated calendar meetings, with no private names/descriptions/organizer/link; organizers/current attendees and verified staff retain authorized details in every view.
 - Only the eligible designated Front Desk contact gets operational booking/approval copies; other staff receive their normal participant messages. Verify contact eligibility and outbox recipient roles without sending bulk test mail.
 - Submit a checked-room test workflow: Pending hold → approval/rejection, employee edit requiring review, cancellation, recurring occurrence horizon, valid check-in/no-show handling.
-- Verify an unchecked room creates Approved employee bookings, including recurrence; toggling the setting does not convert existing Pending/Approved records, and unchanged saves preserve their status. Verify current selected-room policy on substantive edits and an audited staff checkbox change.
+- Verify a checked room creates Pending requests for employees and staff, and an unchecked room creates Approved bookings, including recurrence. Toggling the setting does not convert existing Pending/Approved records, and unchanged saves preserve their status. Verify current selected-room policy on substantive edits and an audited staff checkbox change.
 - Confirm reports/audit/access controls and actual mailbox delivery; do not infer all this from HTTP 200 alone.
 - Keep test meetings distinguishable and cancel eligible test bookings through the UI after verification.
 

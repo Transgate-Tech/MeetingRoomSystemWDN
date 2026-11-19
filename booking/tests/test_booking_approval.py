@@ -221,7 +221,7 @@ class BookingApprovalTests(TestCase):
         # The former approved attendee also receives a calendar cancellation.
         self.assertEqual(send_due_notifications(), 3)
         requests = [
-            message for message in mail.outbox if "awaiting administrator approval" in message.subject
+            message for message in mail.outbox if "awaiting Front Desk approval" in message.subject
         ]
         self.assertEqual(len(requests), 2)
         self.assertTrue(any("Calendar cancellation" in message.subject for message in mail.outbox))

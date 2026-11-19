@@ -14,7 +14,7 @@
       <h2>Facilities</h2><div class="facility-list">{% for facility in room.facilities.all %}<span>{{ facility.name }}</span>{% empty %}<p>Facilities have not been listed yet.</p>{% endfor %}</div>
     </section>
     <aside class="panel">
-      <h2>Booking approval</h2><p>{% if room.requires_approval %}New or changed employee bookings need staff approval. Your request holds the room while Front Desk reviews it.{% else %}New or changed employee bookings are approved automatically. You will receive a confirmation email after booking.{% endif %}</p>
+      <h2>Booking approval</h2><p>{% if room.requires_approval %}New or changed booking requests need Front Desk approval. Your request holds the room while it is reviewed.{% else %}New or changed booking requests are approved automatically. You will receive a confirmation email after booking.{% endif %}</p>
       <h2>Room instructions</h2><p>{{ room.instructions|default:'No additional room instructions.'|linebreaksbr }}</p><a href="{% url 'calendar' %}">View availability →</a>
     </aside>
   </div>

@@ -12,7 +12,7 @@ Inspection covered every URL pattern, templates/static assets, forms, identity a
 
 - Employee creation in a room with **Requires approval** checked produces **Pending**; an unchecked room produces **Approved** automatically. Pending requests hold the complete occupied interval and gap through the PostgreSQL exclusion constraint. New/previously configured rooms default to checked in migration 0011.
 - Verified staff review a dedicated queue and approve a future request or reject it with a required reason visible to its requester. Approval/rejection actors and timestamps are stored and audited.
-- Staff creation is Approved. Employee substantive edits follow the selected room's current setting: checked → Pending; unchecked → Approved automatically. Staff edits retain Approved; substantive edits to Pending in unchecked rooms can confirm automatically. Previous links/notifications are invalidated after substantive changes. Unchanged edits and room toggles preserve saved statuses.
+- New employee and staff bookings follow the selected room's current setting: checked → Pending; unchecked → Approved automatically. Employee substantive edits use the same policy. Staff edits retain an existing Approved status; substantive edits to Pending in unchecked rooms can confirm automatically. Previous links/notifications are invalidated after substantive changes. Unchanged edits and room toggles preserve saved statuses.
 - Rejected/cancelled records release their slot and remain in history. Invalid transitions cannot revive them. Unapproved requests expire as cancelled at the meeting start; approved meetings use the existing check-in/completed/no-show lifecycle.
 - Recurrence remains atomic and finite inside the two-week horizon; each occurrence follows its room policy and is reviewed separately when Pending. Front Desk handles room priority manually.
 
@@ -195,7 +195,7 @@ Company-server deployment of this release, actual mailbox delivery, employee-dev
 
 ## Per-room approval - 8 October 2026
 
-This release adds Requires approval to staff room rows/add/edit and exposes Staff approval required or Automatic approval in employee room/booking screens. Migration `0011_room_requires_approval` follows 0010, defaults all existing rooms to checked and leaves saved booking status/history intact. Employee creations and substantive edits use the selected locked room policy; staff creation remains Approved. No-op saves and policy toggles do not convert an existing Pending queue.
+This release adds Requires approval to staff room rows/add/edit and exposes Staff approval required or Automatic approval in employee room/booking screens. Migration `0011_room_requires_approval` follows 0010, defaults all existing rooms to checked and leaves saved booking status/history intact. New booking requests, including staff-created bookings, follow the selected locked room policy. No-op saves and policy toggles do not convert an existing Pending queue.
 
 ### Automated verification
 

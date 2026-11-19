@@ -72,7 +72,7 @@ def queue_booking_event(booking, event, *, extra_recipients=()):
 
     invitations = project_calendar_invitations(booking, event)
     labels = {
-        "request": "submitted and awaiting administrator approval",
+        "request": "submitted and awaiting Front Desk approval",
         "confirmation": "approved",
         "rejection": "rejected",
         "change": "changed",
@@ -99,7 +99,7 @@ def queue_booking_event(booking, event, *, extra_recipients=()):
             else ""
         )
         + (
-            "\n\nThis request holds the room while awaiting administrator approval. It is not approved yet."
+            "\n\nThis request holds the room while awaiting Front Desk approval. It is not approved yet."
             if event == "request"
             else ""
         )

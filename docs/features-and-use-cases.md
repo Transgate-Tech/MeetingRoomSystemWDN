@@ -62,7 +62,7 @@ Staff permissions are checked against the active account and the session's verif
 | See a meeting organized by someone else | Read-only when your email is listed as attendee; unrelated details denied | Yes |
 | See occupancy of another employee's slot | Yes, as unavailable | Yes, with a link to detail |
 | Read organized/invited meeting title, attendees, notes and decisions | Yes; invited meetings are read-only | Yes |
-| Submit own booking request | Pending if selected room requires approval; otherwise Approved | Yes, staff creation starts Approved |
+| Submit new booking | Pending if selected room requires approval; otherwise Approved | Same room approval setting applies to staff-created bookings |
 | Book on behalf of another employee | No | Yes |
 | Edit/cancel another organizer's eligible booking | No | Yes |
 | Approve/reject requests | No | Yes |
@@ -87,7 +87,7 @@ Paths below are relative to `http://mbs.wdn.com.np`. Numeric identifiers in `{br
 | `/rooms/` | Search/filter active room directory | Signed in |
 | `/rooms/{room_id}/` | Facilities, description and instructions | Signed in; active rooms |
 | `/calendar/` | Month/week/day calendar, room filter and available starts | Signed in |
-| `/bookings/new/` | Three-step meeting request or approved staff booking | Signed in |
+| `/bookings/new/` | Three-step meeting request; room policy decides whether it is Pending or Approved | Signed in |
 | `/bookings/availability/` | Read-only room availability for the full selected schedule/series | Signed in |
 | `/rooms/{room_id}/photo/` | Authenticated optional room photo | Signed in; active room, or verified staff for inactive room |
 | `/bookings/mine/` | My meetings: organized/invited Upcoming and History with role/status/search filters | Signed in |
@@ -278,7 +278,7 @@ Completed meetings keep their historical interval to preserve conflict integrity
 
 ### Submission and review
 
-The selected room's **Requires approval** setting determines employee submission status. It defaults to checked: submission creates Pending, queues a request message to the organizer and designated Front Desk contact, and does not issue approved invitations to attendees. The detail page shows that review is required. Staff review each future Pending request and approve it or reject it with an explanation of up to 500 characters.
+The selected room's **Requires approval** setting determines every new booking's status, whether submitted by an employee or staff member. It defaults to checked: submission creates Pending, queues a request message to the organizer and designated Front Desk contact, and does not issue approved invitations to attendees. The detail page shows that review is required. Staff review each future Pending request and approve it or reject it with an explanation of up to 500 characters.
 
 For an unchecked room, a valid employee submission starts Approved immediately and queues normal confirmation to the organizer, attendees and designated Front Desk contact, including eligible organizer check-in instructions. No staff reviewer is invented: automatic approval records a timestamp with no approval actor. The current room setting is read under a transaction lock when saving; a preview does not override it. Capacity, conflicts, buffers, date/duration rules and ownership checks are identical for both policies.
 
@@ -393,7 +393,7 @@ Deactivation removes the room from employee discovery/new selection and prevents
 
 **Staff desk → Rooms** contains a **Requires approval** checkbox for each active/inactive room. With JavaScript, changing it submits that row immediately; without JavaScript, select the desired state and press that row's **Save** button. The add/edit form provides the same field. Checked is the default for a new room and for every existing room upgraded through migration 0011.
 
-Checked rooms require staff review of employee creations/substantive edits; unchecked rooms confirm those valid requests immediately. Staff-created bookings remain Approved for either setting. A saved toggle takes effect for later writes without a process restart, and is audited as `room_approval_changed` with its old/new values. The staff-only POST validates CSRF/current verified access and locks the room. It changes no booking status: an existing Pending request still needs explicit review or a substantive eligible edit; an existing Approved meeting is not demoted. Use the Pending queue to resolve the backlog deliberately.
+Checked rooms require Front Desk review of all new bookings and employee substantive edits; unchecked rooms confirm those valid new requests immediately. A saved toggle takes effect for later writes without a process restart, and is audited as `room_approval_changed` with its old/new values. The staff-only POST validates CSRF/current verified access and locks the room. It changes no existing booking status: a Pending request still needs explicit review or a substantive eligible edit; an existing Approved meeting is not demoted. Use the Pending queue to resolve the backlog deliberately.
 
 ### Closures
 

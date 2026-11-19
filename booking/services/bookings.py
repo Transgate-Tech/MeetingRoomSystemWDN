@@ -260,8 +260,8 @@ def _create_booking(data, *, actor, staff):
     _capacity(room, data, organizer)
     policy = BookingPolicy.objects.get(pk=1)
     intervals = prepared_booking_intervals(data, policy, staff=staff)
-    automatically_approved = not staff and not room.requires_approval
-    approved = staff or automatically_approved
+    automatically_approved = not room.requires_approval
+    approved = automatically_approved
     series = None
     if data["recurrence"] != "none":
         series = BookingSeries.objects.create(
@@ -283,7 +283,7 @@ def _create_booking(data, *, actor, staff):
                 ends_at=end,
                 kind=Reservation.Kind.BOOKING,
                 status=Reservation.Status.APPROVED if approved else Reservation.Status.PENDING,
-                approved_by=actor if staff else None,
+                approved_by=None,
                 approved_at=timezone.now() if approved else None,
                 organizer=organizer,
                 created_by=actor,

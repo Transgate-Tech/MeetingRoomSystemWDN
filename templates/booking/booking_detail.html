@@ -4,7 +4,7 @@
 <div class="page-container app-page">
   <a class="back-link" href="{% if staff %}{% url 'staff-bookings' %}{% else %}{% url 'my-bookings' %}{% endif %}">← Back to {% if staff %}bookings{% else %}my meetings{% endif %}</a>
   <div class="page-heading"><div><p class="eyebrow">BOOKING #{{ booking.pk }}</p><h1>{{ booking.title }}</h1><p class="lead">{{ booking.room.name }} · {{ booking.starts_at|date:'D, d M Y' }}</p></div><span class="status status-{{ booking.status }}">{{ booking.get_status_display }}</span></div>
-  {% if booking.status == 'pending' %}<p class="notice" role="status">Booking request submitted. Waiting for administrator approval. This room and time are held while the request is reviewed.</p>{% elif booking.status == 'rejected' %}<div class="notice notice-error"><strong>Booking request rejected</strong><p>{{ booking.rejection_reason|linebreaksbr }}</p><p>This request no longer holds the room.</p></div>{% endif %}
+  {% if booking.status == 'pending' %}<p class="notice" role="status">Booking request submitted. Waiting for Front Desk approval. This room and time are held while the request is reviewed.</p>{% elif booking.status == 'rejected' %}<div class="notice notice-error"><strong>Booking request rejected</strong><p>{{ booking.rejection_reason|linebreaksbr }}</p><p>This request no longer holds the room.</p></div>{% endif %}
   <div class="detail-grid">
     <section class="panel"><h2>Meeting details</h2>
       <dl class="detail-list">

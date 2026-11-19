@@ -86,25 +86,23 @@
   function updateApprovalPolicy() {
     const room = selectedRoom();
     const editing = Boolean(config.booking_id);
-    let text = "Choose a room to see whether your booking needs staff approval.";
-    if (config.staff && !editing) {
-      text = "New staff bookings are approved immediately. Confirmation emails are queued after saving.";
-    } else if (room) {
-      if (config.staff && form.dataset.bookingStatus === "approved") {
+    let text = "Choose a room to see whether your booking needs Front Desk approval.";
+    if (room) {
+      if (config.staff && editing && form.dataset.bookingStatus === "approved") {
         text = "Your changes keep this staff-managed booking approved.";
       } else if (room.requires_approval) {
         text = editing && config.staff
-          ? "This pending request still needs approval from the Staff desk after you save changes."
-          : "This room requires staff approval. New or changed requests hold the room while Front Desk reviews them.";
+          ? "This pending request still needs Front Desk approval after you save changes."
+          : "This room requires Front Desk approval. Your request holds the room while it is reviewed.";
       } else {
-        text = "This room does not require staff approval. New or changed bookings are approved automatically, and confirmation emails are queued after saving.";
+        text = "This room does not require Front Desk approval. Your booking is confirmed automatically, and a confirmation email is queued after saving.";
       }
       if (editing) text += " Saving without changes keeps the current booking status.";
     }
     text += ` Check in through your email within ${config.check_in_minutes} minutes of the approved start time.`;
     setText("booking-approval-policy", text);
     setText("booking-review-policy", `${text} Room availability and approval settings are checked again when you submit.`);
-    get("booking-submit-label").textContent = editing ? "Save booking changes" : config.staff || room?.requires_approval === false ? "Confirm booking" : "Submit booking request";
+    get("booking-submit-label").textContent = editing ? "Save booking changes" : room?.requires_approval === false ? "Confirm booking" : "Submit booking request";
   }
 
   function clearError() { error.hidden = true; error.textContent = ""; }

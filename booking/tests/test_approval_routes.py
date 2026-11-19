@@ -62,7 +62,7 @@ class ApprovalRouteTests(TestCase):
     def test_employee_request_is_pending_and_visible_in_upcoming(self):
         self.client.force_login(self.employee)
         response = self.client.post(reverse("booking-new"), self.post_data(), follow=True)
-        self.assertContains(response, "Booking request submitted. Waiting for administrator approval.")
+        self.assertContains(response, "Booking request submitted. Waiting for Front Desk approval.")
         created = Reservation.objects.latest("pk")
         self.assertEqual(created.status, Reservation.Status.PENDING)
         self.assertIsNone(created.approved_by_id)
@@ -212,7 +212,7 @@ class ApprovalRouteTests(TestCase):
         data = self.post_data()
         data["title"] = "Changed meeting request"
         response = self.client.post(reverse("booking-edit", args=[self.booking.pk]), data, follow=True)
-        self.assertContains(response, "Waiting for administrator approval")
+        self.assertContains(response, "Waiting for Front Desk approval")
         self.booking.refresh_from_db()
         self.assertEqual(self.booking.status, Reservation.Status.PENDING)
         self.assertIsNone(self.booking.approved_by_id)

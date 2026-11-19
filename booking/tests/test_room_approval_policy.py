@@ -113,15 +113,20 @@ class RoomApprovalPolicyTests(RoomApprovalFixtures, TestCase):
         self.assertFalse(audit.details["requires_approval"])
         self.assertFalse(AuditEvent.objects.filter(action="booking_approved", target_id=booking.pk).exists())
 
-    def test_staff_creates_approved_booking_in_both_room_policies(self):
-        for room in (self.reviewed_room, self.automatic_room):
+    def test_staff_bookings_follow_the_selected_room_approval_policy(self):
+        for room, status, event, automatic in (
+            (self.reviewed_room, Reservation.Status.PENDING, "request", False),
+            (self.automatic_room, Reservation.Status.APPROVED, "confirmation", True),
+        ):
             with self.subTest(room=room.name):
                 booking = self.created(room, staff=True)
-                self.assertEqual(booking.status, Reservation.Status.APPROVED)
-                self.assertEqual(booking.approved_by_id, self.staff.pk)
-                self.assertEqual(booking.approved_at, NOW)
-                self.assertEqual(booking.notification_set.filter(event_type="confirmation").count(), 2)
-                self.assertFalse(AuditEvent.objects.get(target_id=booking.pk).details["automatic_approval"])
+                self.assertEqual(booking.status, status)
+                self.assertIsNone(booking.approved_by_id)
+                self.assertEqual(booking.approved_at, NOW if automatic else None)
+                self.assertEqual(booking.notification_set.filter(event_type=event).count(), 2)
+                self.assertEqual(
+                    AuditEvent.objects.get(target_id=booking.pk).details["automatic_approval"], automatic
+                )
 
     def test_every_recurring_occurrence_uses_selected_room_approval_policy(self):
         for room, status in (
@@ -211,6 +216,10 @@ class RoomApprovalPolicyTests(RoomApprovalFixtures, TestCase):
 
     def test_noop_employee_save_preserves_human_approval_after_room_policy_change(self):
         booking = self.created(staff=True, organizer_email=self.employee.email)
+        booking.status = Reservation.Status.APPROVED
+        booking.approved_by = self.staff
+        booking.approved_at = NOW
+        booking.save(update_fields=["status", "approved_by", "approved_at"])
         Room.objects.filter(pk=self.reviewed_room.pk).update(requires_approval=False)
         booking = update_booking(booking.pk, booking_values(self.reviewed_room), actor=self.employee)
         self.assertEqual(booking.status, Reservation.Status.APPROVED)
@@ -247,6 +256,11 @@ class RoomApprovalPolicyTests(RoomApprovalFixtures, TestCase):
         for room in (self.reviewed_room, self.automatic_room):
             with self.subTest(room=room.name):
                 booking = self.created(room, staff=True)
+                if booking.status == Reservation.Status.PENDING:
+                    booking.status = Reservation.Status.APPROVED
+                    booking.approved_by = self.staff
+                    booking.approved_at = NOW
+                    booking.save(update_fields=["status", "approved_by", "approved_at"])
                 booking = update_booking(
                     booking.pk, booking_values(room, title="Staff revision"), actor=self.staff, staff=True
                 )
@@ -374,8 +388,8 @@ class RoomApprovalPolicyTests(RoomApprovalFixtures, TestCase):
     def test_booking_post_ignores_forged_approval_fields_and_reports_actual_status(self):
         self.client.force_login(self.employee)
         for room, status, text in (
-            (self.reviewed_room, "pending", "Waiting for administrator approval"),
-            (self.automatic_room, "approved", "does not require administrator approval"),
+            (self.reviewed_room, "pending", "Waiting for Front Desk approval"),
+            (self.automatic_room, "approved", "does not require Front Desk approval"),
         ):
             with self.subTest(room=room.name):
                 response = self.client.post(
